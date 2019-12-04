@@ -43,16 +43,21 @@ function App() {
   }
 
   const run = async () => {
-    setTerminalopen(true);
-    await printOut("Assambling...", 400)
-    const assambleRes = await api.assamble(code);
-    await printOut("Assambling ✔️", 400);
-    await printOut("Linking ...", 400);
-    const linkRes = await api.link(assambleRes.data.data.data);
-    await printOut("Linking ✔️", 400);
-    await printOut("Running ...", 600);
-    const runRes = await api.exec(linkRes.data.data.data);
-    setTerminaltext(runRes.data.data.join("\n"));
+    try {
+      setTerminalopen(true);
+      await printOut("Assambling...", 400);
+      const assambleRes = await api.assamble(code);
+      await printOut("Assambling ✔️", 400);
+      await printOut("Linking ...", 400);
+      const linkRes = await api.link(assambleRes.data.data.data);
+      await printOut("Linking ✔️", 400);
+      await printOut("Running ...", 600);
+      const runRes = await api.exec(linkRes.data.data.data);
+      setTerminaltext(runRes.data.data.join("\n"));
+    } catch (error) {
+      console.log(error);
+      setTerminaltext(`Failed: ${error.message}`);
+    }
   };
 
   return (

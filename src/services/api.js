@@ -3,7 +3,7 @@ import axios from 'axios';
 export default {
 
   client: axios.create({
-    baseURL: 'http://localhost:8084',
+    baseURL: 'http://localhost:80',
     timeout: 15000
   }),
 
