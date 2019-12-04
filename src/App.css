@@ -1,9 +1,22 @@
+body {
+  background: #f5f0f1;
+}
+
+.background-bar {
+  display: block;
+  height: 35vh;
+  width: 100vw;
+  margin-bottom: -30vh;
+  background: rgb(213, 92, 92);
+}
+
 .editor {
+  z-index: 1;
   margin: 30px auto 10px auto;
   width: 80%;
   padding: 10px 20px;
   border-radius: 7px;
-  box-shadow: 0 2px 16px rgba(102, 102, 102, 0.452);
+  box-shadow: 0 2px 24px rgba(30, 30, 30, 0.4);
   background: #1e1e1e;
 }
 

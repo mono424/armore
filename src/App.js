@@ -32,10 +32,23 @@ SWI #0
 `;
 
 function App() {
-
+  let editorWrapRef = React.createRef();
   const [code, setCode] = useState(DEFAULT_CODE);
   const [terminalopen, setTerminalopen] = useState(false);
   const [terminaltext, setTerminaltext] = useState("");
+  const [editorwidth, setEditorwidth] = useState("100%");
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      if (editorWrapRef.current) {
+        setEditorwidth(
+          editorWrapRef.current.offsetWidth
+          - 40 //padding
+        )
+      }
+    }
+    window.addEventListener('resize', handleResize)
+  });
 
   const printOut = async (text, delay) => {
     await setTerminaltext(text);
@@ -62,7 +75,8 @@ function App() {
 
   return (
     <div className="App">
-      <div className="editor">
+      <div className="background-bar"></div>
+      <div className="editor" ref={editorWrapRef}>
         <header>
           <h1>
             ♥ ARM<i>ore</i>
@@ -72,7 +86,7 @@ function App() {
           </button>
         </header>
         <MonacoEditor
-          width="100%"
+          width={editorwidth}
           height={terminalopen ? "400px" : "630px"}
           language="javascript"
           theme="vs-dark"
