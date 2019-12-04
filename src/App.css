@@ -1,22 +1,67 @@
-.App {
-  text-align: center;
+.editor {
+  margin: 30px auto 10px auto;
+  width: 80%;
+  padding: 10px 20px;
+  border-radius: 7px;
+  box-shadow: 0 2px 16px rgba(102, 102, 102, 0.452);
+  background: #1e1e1e;
 }
 
-.App-logo {
-  height: 40vmin;
+.editor h1 {
+  cursor: default;
+  margin: 0 0 14px 0;
+  color: rgb(213, 92, 92);
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.editor h1 i {
+  margin: 0 0 14px 0;
+  color: rgba(213, 92, 92, 0.445);
+}
+
+header {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  justify-content: space-between;
 }
 
-.App-link {
-  color: #09d3ac;
+.main-btn {
+  transition: ease-in-out 0.2s;
+  cursor: pointer;
+  border: none;
+  background: #629162;
+  height: 35px;
+  width: 120px;
+  border-radius: 20px;
+  font-weight: bold;
+  color: white;
+  outline: none;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.452);
+}
+
+.main-btn:hover {
+  background: #89bb89;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.596);
+}
+
+.main-btn:active {
+  background: #b2d4b2;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.164);
+}
+
+footer {
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+footer a {
+  font-size: 16px;
+  margin: 0 8px;
+  color: rgb(213, 92, 92);
+  text-decoration: none;
+}
+
+footer span {
+  color: gray;
+  cursor: default;
 }
