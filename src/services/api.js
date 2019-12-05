@@ -1,9 +1,9 @@
 import axios from 'axios';
+import config from '../config';
 
 export default {
-
   client: axios.create({
-    baseURL: 'http://localhost:80',
+    baseURL: config.API_URL,
     timeout: 15000
   }),
 
@@ -18,5 +18,4 @@ export default {
   exec(buffer) {
     return this.client.post("/exec", { data: buffer });
   }
-
-}
+};
