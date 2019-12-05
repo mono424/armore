@@ -1,0 +1,35 @@
+[debug] [2019-12-05T14:01:26.686Z] ----------------------------------------------------------------------
+[debug] [2019-12-05T14:01:26.691Z] Command:       /usr/bin/node /usr/bin/firebase deploy
+[debug] [2019-12-05T14:01:26.692Z] CLI Version:   7.0.2
+[debug] [2019-12-05T14:01:26.692Z] Platform:      linux
+[debug] [2019-12-05T14:01:26.692Z] Node Version:  v10.17.0
+[debug] [2019-12-05T14:01:26.694Z] Time:          Thu Dec 05 2019 15:01:26 GMT+0100 (GMT+01:00)
+[debug] [2019-12-05T14:01:26.694Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2019-12-05T14:01:26.716Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-12-05T14:01:26.718Z] > authorizing via signed-in user
+[debug] [2019-12-05T14:01:26.718Z] [iam] checking project armore-e8de7 for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2019-12-05T14:01:26.722Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2019-12-05T14:01:26.723Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2019-12-05T14:01:27.009Z] <<< HTTP RESPONSE 200
+[debug] [2019-12-05T14:01:27.035Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/armore-e8de7:testIamPermissions  
+
+[debug] [2019-12-05T14:01:27.995Z] <<< HTTP RESPONSE 200
+[debug] [2019-12-05T14:01:27.999Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/armore-e8de7  
+ 
+[debug] [2019-12-05T14:01:28.300Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'armore-e8de7'...
+[info] 
+[info] i  deploying hosting
+[debug] [2019-12-05T14:01:28.311Z] >>> HTTP REQUEST POST https://firebasehosting.googleapis.com/v1beta1/sites/armore-e8de7/versions  
+
+[debug] [2019-12-05T14:01:30.042Z] <<< HTTP RESPONSE 200
+[info] i  hosting[armore-e8de7]: beginning deploy...
+[info] i  hosting[armore-e8de7]: found 19 files in build
+[debug] [2019-12-05T14:01:30.082Z] [hosting] hash cache [YnVpbGQ] load error: lines is not defined
+[debug] [2019-12-05T14:01:31.813Z] [hosting] hash cache [YnVpbGQ] stored for 19 files
+[debug] [2019-12-05T14:01:31.814Z] [hosting][hash queue][FINAL]
+[debug] [2019-12-05T14:01:31.814Z] >>> HTTP REQUEST POST https://firebasehosting.googleapis.com/v1beta1/sites/armore-e8de7/versions/908ad6b9feb857c2:populateFiles  
+ <request body omitted>
