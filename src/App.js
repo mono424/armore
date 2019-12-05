@@ -15,7 +15,7 @@ const sleep = t => new Promise(r => setTimeout(r, t));
 
 const DEFAULT_CODE = `.data
 msg:
-.ascii "Hello Innsbruck!\n"
+.ascii "Hello Innsbruck!"
 len = . - msg
 .align
 .global _start
