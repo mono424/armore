@@ -27,6 +27,7 @@
   justify-content: center;
   vertical-align: center;
   cursor: pointer;
+  outline: none;
 }
 
 .Terminal .close:hover {

@@ -98,7 +98,7 @@ function App() {
         )}
       </div>
       <footer>
-        <a href="https://khadimfall.com">
+        <a target="_blank" href="https://github.com/mono424/armore">
           <FontAwesomeIcon icon={["fab", "github"]} />
         </a>
         <span>
