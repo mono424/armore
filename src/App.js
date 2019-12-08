@@ -68,8 +68,8 @@ function App() {
       const runRes = await api.exec(linkRes.data.data.data);
       setTerminaltext(runRes.data.data.join("\n"));
     } catch (error) {
-      console.log(error);
-      setTerminaltext(`Failed: ${error.message}`);
+      const respMsg = error.response && error.response.data.message;
+      setTerminaltext(`**ERROR**\n\n${respMsg || error.message}`);
     }
   };
 
