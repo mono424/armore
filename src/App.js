@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fab } from "@fortawesome/free-brands-svg-icons";
-import { faTimes, faSave, faFolderOpen, faLink, faFile, faTrash, faFileUpload } from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faSave, faFolderOpen, faLink, faFile, faTrash, faFileUpload, faExpand, faCompress } from "@fortawesome/free-solid-svg-icons";
 
 import api from './services/api';
 import storage from './services/storage';
@@ -29,7 +29,9 @@ library.add(
   faLink,
   faFile,
   faTrash,
-  faFileUpload
+  faFileUpload,
+  faExpand,
+  faCompress
 );
 
 const sleep = t => new Promise(r => setTimeout(r, t));
@@ -89,24 +91,18 @@ SWI #0
 function App() {
   let editorWrapRef = React.createRef();
   const [code, setCode] = useState(DEFAULT_CODE);
+  const [expanded, setExpanded] = useState(false);
   const [terminalopen, setTerminalopen] = useState(false);
   const [terminaltext, setTerminaltext] = useState("");
   const [filename, setFilename] = useState("unknown.asm");
   const [filenameOpened, setFilenameOpened] = useState(null); // Last opened file; relevant for save lock; Ensures that existing files are not overwritten by mistake.
   const [editorwidth, setEditorwidth] = useState("100%");
+  const [editorheight, setEditorheight] = useState("100%");
   const [openfileDialogOpen, setOpenfileDialogOpen] = useState(false);
   const filenameIsOpenedOne = filenameOpened === filename;
 
   React.useEffect(() => {
-    const handleResize = () => {
-      if (editorWrapRef.current) {
-        setEditorwidth(
-          editorWrapRef.current.offsetWidth
-          - 40 //padding
-        )
-      }
-    }
-    window.addEventListener('resize', handleResize)
+    
   });
 
   const printOut = async (text, delay) => {
@@ -130,6 +126,22 @@ function App() {
       const respMsg = error.response && error.response.data.message;
       setTerminaltext(`**ERROR**\n\n${respMsg || error.message}`);
     }
+  };
+
+  const updateEditorSize = () => {
+    if (editorWrapRef.current) {
+      setEditorwidth(
+        editorWrapRef.current.offsetWidth
+      );
+      setEditorheight(
+        editorWrapRef.current.offsetHeight
+        - (terminalopen ? 220 : 0)
+      );
+    }
+  };
+
+  const toggleExpand = () => {
+    setExpanded(!expanded);
   };
 
   const copyLink = () => {
@@ -180,12 +192,22 @@ function App() {
   };
 
   React.useEffect(() => {
+    updateEditorSize();    
+  }, [expanded, terminalopen]);
+
+  React.useEffect(() => {
     // URL ARGUMENTS
     const args = getUrlArgs();
     if (args.code) {
       setCode(args.code);
       setFilename(args.filename);
     }
+
+    // Resize Editor on window resize
+    const handleResize = () => {
+      updateEditorSize();
+    };
+    window.addEventListener("resize", handleResize);
   }, []);
 
   // HOTKEYS
@@ -206,9 +228,11 @@ function App() {
           onClose={() => setOpenfileDialogOpen(false)}
         />
       )}
-      <div className="background-bar"></div>
+      {expanded || <div className="background-bar"></div>}
       <DropZone onDrop={onFileDrop}>
-        <div className="editor" ref={editorWrapRef}>
+        <div
+          className={"editor" + (expanded ? " expanded" : "")}
+        >
           <header>
             <div className="main-head">
               <h1>
@@ -236,35 +260,45 @@ function App() {
               <button onClick={run} className="main-btn">
                 RUN
               </button>
+              <button onClick={toggleExpand} className="icon-btn">
+                <FontAwesomeIcon
+                  size="2x"
+                  icon={expanded ? "compress" : "expand"}
+                />
+              </button>
             </div>
           </header>
-          <MonacoEditor
-            width={editorwidth}
-            height={terminalopen ? "400px" : "630px"}
-            language="javascript"
-            theme="vs-dark"
-            value={code}
-            onChange={setCode}
-          />
-          {terminalopen && (
-            <Terminal
-              text={terminaltext}
-              close={() => setTerminalopen(false)}
+          <div className="editor-inner-wrap" ref={editorWrapRef}>
+            <MonacoEditor
+              width={editorwidth}
+              height={editorheight}
+              language="javascript"
+              theme="vs-dark"
+              value={code}
+              onChange={setCode}
             />
-          )}
+            {terminalopen && (
+              <Terminal
+                text={terminaltext}
+                close={() => setTerminalopen(false)}
+              />
+            )}
+          </div>
         </div>
       </DropZone>
-      <footer>
-        <a target="_blank" href="https://github.com/mono424/armore">
-          <FontAwesomeIcon icon={["fab", "github"]} />
-        </a>
-        <span>
-          handcrafted by
-          <a target="_blank" href="https://khadimfall.com">
-            Khadim Fall
+      {expanded || (
+        <footer>
+          <a target="_blank" href="https://github.com/mono424/armore">
+            <FontAwesomeIcon icon={["fab", "github"]} />
           </a>
-        </span>
-      </footer>
+          <span>
+            handcrafted by
+            <a target="_blank" href="https://khadimfall.com">
+              Khadim Fall
+            </a>
+          </span>
+        </footer>
+      )}
     </div>
   );
 }

@@ -22,11 +22,29 @@ body {
 .editor {
   z-index: 1;
   margin: 30px auto 10px auto;
-  width: 80%;
-  padding: 10px 20px;
+  width: 87%;
+  height: 700px;
+  padding: 10px 20px 20px 20px;
   border-radius: 7px;
   box-shadow: 0 2px 24px rgba(30, 30, 30, 0.4);
   background: #1e1e1e;
+  box-sizing: border-box;
+}
+
+.editor.expanded {
+  border-radius: 0;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+}
+
+.editor .editor-inner-wrap {
+  width: 100%;
+  height: calc(100% - 56px);
+}
+
+.editor header {
+  height: 56px;
 }
 
 .main-head {
@@ -83,7 +101,7 @@ header {
   color: white;
   outline: none;
   box-shadow: 0 2px 16px rgba(0, 0, 0, 0.452);
-  margin: 0 0 0 25px;
+  margin: 0 10px 0 25px;
 }
 
 .main-btn:hover {
@@ -122,7 +140,7 @@ header {
 }
 
 footer {
-  width: 80%;
+  width: 85%;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
