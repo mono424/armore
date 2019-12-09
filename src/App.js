@@ -7,11 +7,21 @@ import './App.css';
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fab } from "@fortawesome/free-brands-svg-icons";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faSave, faFolderOpen, faShare } from "@fortawesome/free-solid-svg-icons";
 
-library.add(fab, faTimes);
+library.add(fab, faTimes, faSave, faFolderOpen, faShare);
 
 const sleep = t => new Promise(r => setTimeout(r, t));
+
+const getUrlArgs = () => {
+  const args = window.location.href.split("#")[1];
+  if (!args) return {};
+  try {
+    return JSON.parse(atob(args));
+  } catch (e) {
+    return {};
+  }
+};
 
 const DEFAULT_CODE = `.data
 msg:
@@ -37,6 +47,13 @@ function App() {
   const [terminalopen, setTerminalopen] = useState(false);
   const [terminaltext, setTerminaltext] = useState("");
   const [editorwidth, setEditorwidth] = useState("100%");
+
+  React.useEffect(() => {
+    const args = getUrlArgs();
+    if (args.code) {
+      setCode(args.code);
+    }
+  }, []);
 
   React.useEffect(() => {
     const handleResize = () => {
@@ -73,6 +90,11 @@ function App() {
     }
   };
 
+  const share = () => {
+    const link = `${window.location.origin}#${btoa(JSON.stringify({ code }))}`;
+    console.log(link);
+  };
+
   return (
     <div className="App">
       <div className="background-bar"></div>
@@ -81,9 +103,20 @@ function App() {
           <h1>
             ♥ ARM<i>ore</i>
           </h1>
-          <button onClick={run} className="main-btn">
-            RUN
-          </button>
+          <div className="controls">
+            <button onClick={run} className="icon-btn">
+              <FontAwesomeIcon size="2x" icon="folder-open" />
+            </button>
+            <button onClick={run} className="icon-btn">
+              <FontAwesomeIcon size="2x" icon="save" />
+            </button>
+            <button onClick={share} className="icon-btn">
+              <FontAwesomeIcon size="2x" icon="share" />
+            </button>
+            <button onClick={run} className="main-btn">
+              RUN
+            </button>
+          </div>
         </header>
         <MonacoEditor
           width={editorwidth}

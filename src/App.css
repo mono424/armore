@@ -36,6 +36,11 @@ header {
   justify-content: space-between;
 }
 
+.controls {
+  display: flex;
+  align-items: center;
+}
+
 .main-btn {
   transition: ease-in-out 0.2s;
   cursor: pointer;
@@ -48,6 +53,7 @@ header {
   color: white;
   outline: none;
   box-shadow: 0 2px 16px rgba(0, 0, 0, 0.452);
+  margin: 0 0 0 25px;
 }
 
 .main-btn:hover {
@@ -58,6 +64,31 @@ header {
 .main-btn:active {
   background: #b2d4b2;
   box-shadow: 0 2px 20px rgba(0, 0, 0, 0.164);
+}
+
+.icon-btn {
+  background: transparent;
+  border: none;
+  height: 35px;
+  width: 35px;
+  border-radius: 50%;
+  margin: 0 5px 0 5px;
+  outline: none;
+  cursor: pointer;
+  transition: ease 0.18s;
+}
+
+.icon-btn:hover {
+  color: rgb(213, 92, 92);
+}
+
+.icon-btn:active {
+  color: rgb(241, 136, 136);
+}
+
+.icon-btn svg {
+  width: 18px;
+  height: 18px;
 }
 
 footer {
