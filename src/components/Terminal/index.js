@@ -2,7 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import './style.css';
 
-function App(props) {
+function Terminal(props) {
   const { text, close } = props;
   return (
     <div className="Terminal">
@@ -14,4 +14,4 @@ function App(props) {
   );
 }
 
-export default App;
+export default Terminal;
