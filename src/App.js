@@ -1,17 +1,45 @@
 import React, { useState } from 'react';
 import MonacoEditor from "react-monaco-editor";
-import Terminal from "./components/Terminal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import api from './services/api';
-import './App.css';
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fab } from "@fortawesome/free-brands-svg-icons";
-import { faTimes, faSave, faFolderOpen, faShare } from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faSave, faFolderOpen, faLink } from "@fortawesome/free-solid-svg-icons";
 
-library.add(fab, faTimes, faSave, faFolderOpen, faShare);
+import api from './services/api';
+import Terminal from "./components/Terminal";
+import './App.css';
+
+library.add(fab, faTimes, faSave, faFolderOpen, faLink);
 
 const sleep = t => new Promise(r => setTimeout(r, t));
+
+const copyToClipboard = text => {
+  if (window.clipboardData && window.clipboardData.setData) {
+    // Internet Explorer-specific code path to prevent textarea being shown while dialog is visible.
+    return window.clipboardData.setData("Text", text);
+  } else if (
+    document.queryCommandSupported &&
+    document.queryCommandSupported("copy")
+  ) {
+    var textarea = document.createElement("textarea");
+    textarea.textContent = text;
+    textarea.style.position = "fixed"; // Prevent scrolling to bottom of page in Microsoft Edge.
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+      return document.execCommand("copy"); // Security exception may be thrown by some browsers.
+    } catch (ex) {
+      console.warn("Copy to clipboard failed.", ex);
+      return false;
+    } finally {
+      document.body.removeChild(textarea);
+    }
+  }
+};
 
 const getUrlArgs = () => {
   const args = window.location.href.split("#")[1];
@@ -46,12 +74,14 @@ function App() {
   const [code, setCode] = useState(DEFAULT_CODE);
   const [terminalopen, setTerminalopen] = useState(false);
   const [terminaltext, setTerminaltext] = useState("");
+  const [filename, setFilename] = useState("unknown.asm");
   const [editorwidth, setEditorwidth] = useState("100%");
 
   React.useEffect(() => {
     const args = getUrlArgs();
     if (args.code) {
       setCode(args.code);
+      setFilename(args.filename);
     }
   }, []);
 
@@ -91,18 +121,23 @@ function App() {
   };
 
   const share = () => {
-    const link = `${window.location.origin}#${btoa(JSON.stringify({ code }))}`;
-    console.log(link);
+    const link = `${window.location.origin}#${btoa(JSON.stringify({ code, filename }))}`;
+    copyToClipboard(link);
+    toast("URL copied to clipboard", { autoClose: 2500, className: 'toasty' });
   };
 
   return (
     <div className="App">
+      <ToastContainer />
       <div className="background-bar"></div>
       <div className="editor" ref={editorWrapRef}>
         <header>
-          <h1>
-            ♥ ARM<i>ore</i>
-          </h1>
+          <div className="main-head">
+            <h1>
+              ♥ ARM<i>ore</i>
+            </h1>
+            <input class="filename" value={filename} onChange={e => setFilename(e.target.value)} />
+          </div>
           <div className="controls">
             <button onClick={run} className="icon-btn">
               <FontAwesomeIcon size="2x" icon="folder-open" />
@@ -111,7 +146,7 @@ function App() {
               <FontAwesomeIcon size="2x" icon="save" />
             </button>
             <button onClick={share} className="icon-btn">
-              <FontAwesomeIcon size="2x" icon="share" />
+              <FontAwesomeIcon size="2x" icon="link" />
             </button>
             <button onClick={run} className="main-btn">
               RUN

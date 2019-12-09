@@ -2,6 +2,15 @@ body {
   background: #f5f0f1;
 }
 
+.toasty {
+  padding: 10px 15px 10px 20px;
+  border-radius: 10px;
+}
+
+.toasty .Toastify__progress-bar {
+  background: #f5f0f1;
+}
+
 .background-bar {
   display: block;
   height: 35vh;
@@ -20,15 +29,36 @@ body {
   background: #1e1e1e;
 }
 
+.main-head {
+  display: flex;
+  align-items: center;
+}
+
 .editor h1 {
   cursor: default;
   margin: 0 0 14px 0;
   color: rgb(213, 92, 92);
+  margin-right: 30px;
 }
 
 .editor h1 i {
   margin: 0 0 14px 0;
   color: rgba(213, 92, 92, 0.445);
+}
+
+.filename {
+  transition: ease 0.2s;
+  background: transparent;
+  border: 2px solid transparent;
+  border-bottom: 2px solid rgba(213, 92, 92, 0.2);
+  color: #a09a9b;
+  font-size: 16px;
+  outline: none;
+  margin: -5px 0 0 0;
+}
+
+.filename:focus {
+  border-bottom: 2px solid rgb(213, 92, 92);
 }
 
 header {
