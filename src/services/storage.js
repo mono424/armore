@@ -13,4 +13,11 @@ export default {
     }));
   },
 
+  deleteFile(fileName, code) {
+    return localStorage.setItem("files", JSON.stringify({
+      ...this.files(),
+      [fileName]: undefined
+    }));
+  },
+
 };

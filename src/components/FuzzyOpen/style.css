@@ -1,35 +1,76 @@
-.Terminal {
-  position: relative;
-  font-family: Consolas,monaco,monospace; 
-  line-height: 14px;
-  font-size: 12px;
-  width: 100%;
-  height: 200px;
-  background: black;
-  color: white;
-  border-radius: 12px;
-  margin: 20px 0 10px 0;
-  padding: 6px 20px;
-  box-sizing: border-box;
+.FuzzyOpen {
+  background: rgba(0, 0, 0, 0.3);
+  position: fixed;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 120px 0;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
 }
 
-.Terminal .close {
-  position: absolute;
-  width: 30px;
-  height: 30px;
+.FuzzyOpen .search {
+  width: 520px;
+  background: #c9c3c4;
+  border-radius: 16px;
+  box-shadow: 0 5px 20px black;
+}
+
+.FuzzyOpen .search input {
+  width: 100%;
+  background: #f5f0f1;
+  box-sizing: border-box;
+  border-radius: 16px 16px 0 0;
   border: none;
-  background: transparent;
-  right: 10px;
-  top: 10px;
-  background: rgba(255, 255, 255, 0.527);
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  vertical-align: center;
-  cursor: pointer;
+  font-size: 26px;
+  padding: 20px 25px;
   outline: none;
 }
 
-.Terminal .close:hover {
-  background: rgba(255, 255, 255, 0.733);
+.FuzzyOpen .search ul {
+  margin: 0;
+  padding: 10px 0;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.FuzzyOpen .search ul li {
+  list-style: none;
+  padding: 15px 20px;
+  margin: 5px 10px;
+  font-size: 14px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: ease 0.2s;
+  position: relative;
+}
+
+.FuzzyOpen .search ul li .trash {
+  position: absolute;
+  color: #a0999a;
+  right: 20px;
+  top: 18px;
+}
+
+.FuzzyOpen .search ul li .trash:hover {
+  color: #706a6b;
+}
+
+.FuzzyOpen .search ul li .icon {
+  margin-right: 15px;
+  color: rgb(213, 92, 92);
+}
+
+.FuzzyOpen .search ul li:hover {
+  background: #f5f0f1;
+}
+
+.FuzzyOpen .search .nothing-found {
+  background: transparent;
+  padding: 20px 0;
+  text-align: center;
+  font-style: italic;
 }

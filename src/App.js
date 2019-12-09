@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fab } from "@fortawesome/free-brands-svg-icons";
-import { faTimes, faSave, faFolderOpen, faLink, faFile } from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faSave, faFolderOpen, faLink, faFile, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 import api from './services/api';
 import storage from './services/storage';
@@ -15,7 +15,7 @@ import Terminal from "./components/Terminal";
 import './App.css';
 import FuzzyOpen from './components/FuzzyOpen';
 
-library.add(fab, faTimes, faSave, faFolderOpen, faLink, faFile);
+library.add(fab, faTimes, faSave, faFolderOpen, faLink, faFile, faTrash);
 
 const sleep = t => new Promise(r => setTimeout(r, t));
 
@@ -77,8 +77,10 @@ function App() {
   const [terminalopen, setTerminalopen] = useState(false);
   const [terminaltext, setTerminaltext] = useState("");
   const [filename, setFilename] = useState("unknown.asm");
+  const [filenameOpened, setFilenameOpened] = useState(null); // Last opened file; relevant for save lock; Ensures that existing files are not overwritten by mistake.
   const [editorwidth, setEditorwidth] = useState("100%");
   const [openfileDialogOpen, setOpenfileDialogOpen] = useState(false);
+  const filenameIsOpenedOne = filenameOpened === filename;
 
   React.useEffect(() => {
     const args = getUrlArgs();
@@ -129,9 +131,18 @@ function App() {
     toast("URL copied to clipboard", { autoClose: 2500, className: 'toasty' });
   };
 
+  const deleteFile = (fileName) => {
+    storage.deleteFile(fileName);
+    toast("File removed", { autoClose: 2500, className: "toasty" });
+  };
+
   const saveFile = () => {
+    if (!filenameIsOpenedOne && storage.files()[filename]) {
+      return toast("File already exists!", { autoClose: 2500, className: "toasty" });
+    }
     storage.saveFile(filename, code);
     toast("File saved", { autoClose: 2500, className: 'toasty' });
+    setFilenameOpened(filename);
   };
 
   const openFile = (fileName) => {
@@ -139,6 +150,7 @@ function App() {
     setOpenfileDialogOpen(false);
     setFilename(fileName);
     setCode(file.code);
+    setFilenameOpened(fileName);
   };
 
   return (
@@ -147,6 +159,7 @@ function App() {
       {openfileDialogOpen && (
         <FuzzyOpen
           onSelect={openFile}
+          onDelete={deleteFile}
           backdropClick={() => setOpenfileDialogOpen(false)}
         />
       )}
@@ -164,7 +177,10 @@ function App() {
             />
           </div>
           <div className="controls">
-            <button onClick={() => setOpenfileDialogOpen(true)} className="icon-btn">
+            <button
+              onClick={() => setOpenfileDialogOpen(true)}
+              className="icon-btn"
+            >
               <FontAwesomeIcon size="2x" icon="folder-open" />
             </button>
             <button onClick={saveFile} className="icon-btn">
