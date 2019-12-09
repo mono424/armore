@@ -65,7 +65,7 @@ const getUrlArgs = () => {
   const args = window.location.href.split("#")[1];
   if (!args) return {};
   try {
-    return JSON.parse(atob(args));
+    return JSON.parse(decodeURIComponent(atob(args)));
   } catch (e) {
     return {};
   }
@@ -144,7 +144,7 @@ function App() {
   };
 
   const copyLink = () => {
-    const link = `${window.location.origin}#${btoa(JSON.stringify({ code, filename }))}`;
+    const link = `${window.location.origin}#${btoa(encodeURIComponent(JSON.stringify({ code, filename })))}`;
     copyToClipboard(link);
     toast("URL copied to clipboard", { autoClose: 2500, className: 'toasty' });
   };
