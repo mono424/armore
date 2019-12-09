@@ -24,7 +24,7 @@ body {
   margin: 30px auto 10px auto;
   width: 87%;
   height: 700px;
-  padding: 10px 20px 20px 20px;
+  padding: 10px 2px 20px 0;
   border-radius: 7px;
   box-shadow: 0 2px 24px rgba(30, 30, 30, 0.4);
   background: #1e1e1e;
@@ -41,10 +41,12 @@ body {
 .editor .editor-inner-wrap {
   width: 100%;
   height: calc(100% - 56px);
+  box-sizing: border-box;
 }
 
 .editor header {
   height: 56px;
+  padding: 0 16px 0 22px;
 }
 
 .main-head {
@@ -104,6 +106,20 @@ header {
   margin: 0 10px 0 25px;
 }
 
+.main-btn.mobile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 35px;
+  margin-left: 15px;
+  margin-right: 0;
+}
+
+.main-btn.mobile svg {
+  width: 12px;
+  height: 12px;
+}
+
 .main-btn:hover {
   background: #89bb89;
   box-shadow: 0 2px 20px rgba(0, 0, 0, 0.596);
@@ -156,4 +172,16 @@ footer a {
 footer span {
   color: gray;
   cursor: default;
+}
+
+@media only screen and (max-width: 930px) {
+  .filename {
+    width: 100px;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .editor h1 .text {
+    display: none;
+  }
 }

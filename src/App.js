@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fab } from "@fortawesome/free-brands-svg-icons";
-import { faTimes, faSave, faFolderOpen, faLink, faFile, faTrash, faFileUpload, faExpand, faCompress } from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faSave, faFolderOpen, faLink, faFile, faTrash, faFileUpload, faExpand, faCompress, faPlay } from "@fortawesome/free-solid-svg-icons";
 
 import api from './services/api';
 import storage from './services/storage';
@@ -31,7 +31,8 @@ library.add(
   faTrash,
   faFileUpload,
   faExpand,
-  faCompress
+  faCompress,
+  faPlay
 );
 
 const sleep = t => new Promise(r => setTimeout(r, t));
@@ -93,6 +94,7 @@ function App() {
   const [code, setCode] = useState(DEFAULT_CODE);
   const [expanded, setExpanded] = useState(false);
   const [terminalopen, setTerminalopen] = useState(false);
+  const [mobile, setMobile] = useState(window.screen.width < 600);
   const [terminaltext, setTerminaltext] = useState("");
   const [filename, setFilename] = useState("unknown.asm");
   const [filenameOpened, setFilenameOpened] = useState(null); // Last opened file; relevant for save lock; Ensures that existing files are not overwritten by mistake.
@@ -100,10 +102,6 @@ function App() {
   const [editorheight, setEditorheight] = useState("100%");
   const [openfileDialogOpen, setOpenfileDialogOpen] = useState(false);
   const filenameIsOpenedOne = filenameOpened === filename;
-
-  React.useEffect(() => {
-    
-  });
 
   const printOut = async (text, delay) => {
     await setTerminaltext(text);
@@ -129,12 +127,13 @@ function App() {
   };
 
   const updateEditorSize = () => {
-    if (editorWrapRef.current) {
+    const element = editorWrapRef.current;
+    if (element) {
       setEditorwidth(
-        editorWrapRef.current.offsetWidth
+        element.offsetWidth
       );
       setEditorheight(
-        editorWrapRef.current.offsetHeight
+        element.offsetHeight
         - (terminalopen ? 220 : 0)
       );
     }
@@ -196,6 +195,22 @@ function App() {
   }, [expanded, terminalopen]);
 
   React.useEffect(() => {
+    // Resize Editor on window resize
+    const handleResize = () => {
+      updateEditorSize();
+    };
+    window.onresize = handleResize;
+
+    // HOTKEYS
+    hotkeys.unbind("f5");
+    hotkeys.unbind("ctrl+s");
+    hotkeys.unbind("ctrl+o");
+    hotkeys("f5", (e) => { e.preventDefault(); run(); });
+    hotkeys("ctrl+s", (e) => { e.preventDefault(); saveFile(); });
+    hotkeys("ctrl+o", (e) => { e.preventDefault(); setOpenfileDialogOpen(true); });
+  });
+
+  React.useEffect(() => {
     // URL ARGUMENTS
     const args = getUrlArgs();
     if (args.code) {
@@ -203,20 +218,11 @@ function App() {
       setFilename(args.filename);
     }
 
-    // Resize Editor on window resize
-    const handleResize = () => {
-      updateEditorSize();
-    };
-    window.addEventListener("resize", handleResize);
+    // if mobile
+    if (mobile) {
+      setExpanded(true);
+    }
   }, []);
-
-  // HOTKEYS
-  hotkeys.unbind("f5");
-  hotkeys.unbind("ctrl+s");
-  hotkeys.unbind("ctrl+o");
-  hotkeys("f5", (e) => { e.preventDefault(); run(); });
-  hotkeys("ctrl+s", (e) => { e.preventDefault(); saveFile(); });
-  hotkeys("ctrl+o", (e) => { e.preventDefault(); setOpenfileDialogOpen(true); });
 
   return (
     <div className="App">
@@ -230,16 +236,17 @@ function App() {
       )}
       {expanded || <div className="background-bar"></div>}
       <DropZone onDrop={onFileDrop}>
-        <div
-          className={"editor" + (expanded ? " expanded" : "")}
-        >
+        <div className={"editor" + (expanded ? " expanded" : "")}>
           <header>
             <div className="main-head">
               <h1>
-                ♥ ARM<i>ore</i>
+                ♥{" "}
+                <span className="text">
+                  ARM<i>ore</i>
+                </span>
               </h1>
               <input
-                class="filename"
+                className="filename"
                 value={filename}
                 onChange={e => setFilename(e.target.value)}
               />
@@ -257,15 +264,18 @@ function App() {
               <button onClick={copyLink} className="icon-btn">
                 <FontAwesomeIcon size="2x" icon="link" />
               </button>
-              <button onClick={run} className="main-btn">
-                RUN
+              <button
+                onClick={run}
+                className={"main-btn" + (mobile ? " mobile" : "")}
+              >
+                {!mobile ? "RUN" : <FontAwesomeIcon size="2x" icon="play" />}
               </button>
-              <button onClick={toggleExpand} className="icon-btn">
-                <FontAwesomeIcon
-                  size="2x"
-                  icon={expanded ? "compress" : "expand"}
-                />
-              </button>
+              {
+                !mobile && 
+                (<button onClick={toggleExpand} className="icon-btn">
+                  <FontAwesomeIcon icon={expanded ? "compress" : "expand"} />
+                </button>)
+              }
             </div>
           </header>
           <div className="editor-inner-wrap" ref={editorWrapRef}>

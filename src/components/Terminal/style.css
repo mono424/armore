@@ -3,12 +3,12 @@
   font-family: Consolas,monaco,monospace; 
   line-height: 14px;
   font-size: 12px;
-  width: 100%;
+  width: calc(100% - 30px);
   height: 200px;
   background: black;
   color: white;
   border-radius: 12px;
-  margin: 20px 0 10px 0;
+  margin: 20px 15px 10px 15px;
   padding: 6px 20px;
   box-sizing: border-box;
 }
