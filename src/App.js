@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import MonacoEditor from "react-monaco-editor";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import hotkeys from "hotkeys-js";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -15,6 +16,10 @@ import Terminal from "./components/Terminal";
 import './App.css';
 import FuzzyOpen from './components/FuzzyOpen';
 import DropZone from './components/DropZone';
+
+hotkeys.filter = () => {
+  return true;
+};
 
 library.add(
   fab,
@@ -91,14 +96,6 @@ function App() {
   const [editorwidth, setEditorwidth] = useState("100%");
   const [openfileDialogOpen, setOpenfileDialogOpen] = useState(false);
   const filenameIsOpenedOne = filenameOpened === filename;
-
-  React.useEffect(() => {
-    const args = getUrlArgs();
-    if (args.code) {
-      setCode(args.code);
-      setFilename(args.filename);
-    }
-  }, []);
 
   React.useEffect(() => {
     const handleResize = () => {
@@ -182,6 +179,20 @@ function App() {
     };
   };
 
+    React.useEffect(() => {
+      // URL ARGUMENTS
+      const args = getUrlArgs();
+      if (args.code) {
+        setCode(args.code);
+        setFilename(args.filename);
+      }
+
+      // HOTKEYS
+      hotkeys("f5", (e) => { e.preventDefault(); run(); });
+      hotkeys("ctrl+s", (e) => { e.preventDefault(); saveFile(); });
+      hotkeys("ctrl+o", (e) => { e.preventDefault(); setOpenfileDialogOpen(true); });
+    }, []);
+
   return (
     <div className="App">
       <ToastContainer />
@@ -189,7 +200,7 @@ function App() {
         <FuzzyOpen
           onSelect={openFile}
           onDelete={deleteFile}
-          backdropClick={() => setOpenfileDialogOpen(false)}
+          onClose={() => setOpenfileDialogOpen(false)}
         />
       )}
       <div className="background-bar"></div>

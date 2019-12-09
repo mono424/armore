@@ -1,5 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import hotkeys from "hotkeys-js";
 
 import storage from '../../services/storage';
 import "./style.css";
@@ -8,16 +9,12 @@ function FuzzyOpen(props) {
   const {
     onDelete = () => {},
     onSelect = () => {},
-    backdropClick = () => {}
+    onClose = () => {}
   } = props;
   const [query, setQuery] = React.useState("");
   const [files, setFiles] = React.useState(storage.files());
   const items = Object.keys(files);
   const itemsFiltered = items.filter(i => query === '' || i.replace(query, '') !== i);
-
-  React.useEffect(() => {
-    document.querySelector(".FuzzyOpen .search input").focus();
-  }, [])
 
   const deleteHandler = (e, item) => {
     e.stopPropagation();
@@ -25,8 +22,20 @@ function FuzzyOpen(props) {
     setFiles(storage.files());
   };
 
+  React.useEffect(() => {
+    // Focus on textbox
+    document.querySelector(".FuzzyOpen .search input").focus();
+
+    hotkeys('esc', {
+      element: document.querySelector(".FuzzyOpen .search input"),
+    }, (e) => {
+      e.preventDefault();
+      onClose();
+    });
+  }, [])
+
   return (
-    <div className="FuzzyOpen" onClick={backdropClick}>
+    <div className="FuzzyOpen" onClick={onClose}>
       <div className="search" onClick={e => e.stopPropagation()}>
         <input value={query} onChange={e => setQuery(e.target.value)} />
         {!itemsFiltered.length && (
