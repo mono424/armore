@@ -27,17 +27,17 @@ function FuzzyOpen(props) {
     document.querySelector(".FuzzyOpen .search input").focus();
 
     hotkeys('esc', {
-      element: document.querySelector(".FuzzyOpen .search input"),
+      element: document.querySelector(".FuzzyOpen"),
     }, (e) => {
       e.preventDefault();
       onClose();
     });
+
   }, [])
 
-  hotkeys.unbind('enter', 'fuzzyopen');
+  hotkeys.unbind("enter");
   hotkeys('enter', {
-    scope: 'fuzzyopen',
-    element: document.querySelector(".FuzzyOpen .search input"),
+    element: document.querySelector(".FuzzyOpen"),
   }, (e) => {
     e.preventDefault();
     itemsFiltered.length && onSelect(itemsFiltered[0]);
