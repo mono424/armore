@@ -179,19 +179,22 @@ function App() {
     };
   };
 
-    React.useEffect(() => {
-      // URL ARGUMENTS
-      const args = getUrlArgs();
-      if (args.code) {
-        setCode(args.code);
-        setFilename(args.filename);
-      }
+  React.useEffect(() => {
+    // URL ARGUMENTS
+    const args = getUrlArgs();
+    if (args.code) {
+      setCode(args.code);
+      setFilename(args.filename);
+    }
+  }, []);
 
-      // HOTKEYS
-      hotkeys("f5", (e) => { e.preventDefault(); run(); });
-      hotkeys("ctrl+s", (e) => { e.preventDefault(); saveFile(); });
-      hotkeys("ctrl+o", (e) => { e.preventDefault(); setOpenfileDialogOpen(true); });
-    }, []);
+  // HOTKEYS
+  hotkeys.unbind("f5");
+  hotkeys.unbind("ctrl+s");
+  hotkeys.unbind("ctrl+o");
+  hotkeys("f5", (e) => { e.preventDefault(); run(); });
+  hotkeys("ctrl+s", (e) => { e.preventDefault(); saveFile(); });
+  hotkeys("ctrl+o", (e) => { e.preventDefault(); setOpenfileDialogOpen(true); });
 
   return (
     <div className="App">

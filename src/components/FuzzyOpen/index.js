@@ -34,6 +34,15 @@ function FuzzyOpen(props) {
     });
   }, [])
 
+  hotkeys.unbind('enter', 'fuzzyopen');
+  hotkeys('enter', {
+    scope: 'fuzzyopen',
+    element: document.querySelector(".FuzzyOpen .search input"),
+  }, (e) => {
+    e.preventDefault();
+    itemsFiltered.length && onSelect(itemsFiltered[0]);
+  });
+
   return (
     <div className="FuzzyOpen" onClick={onClose}>
       <div className="search" onClick={e => e.stopPropagation()}>
