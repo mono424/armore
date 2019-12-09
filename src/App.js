@@ -7,15 +7,25 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fab } from "@fortawesome/free-brands-svg-icons";
-import { faTimes, faSave, faFolderOpen, faLink, faFile, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faSave, faFolderOpen, faLink, faFile, faTrash, faFileUpload } from "@fortawesome/free-solid-svg-icons";
 
 import api from './services/api';
 import storage from './services/storage';
 import Terminal from "./components/Terminal";
 import './App.css';
 import FuzzyOpen from './components/FuzzyOpen';
+import DropZone from './components/DropZone';
 
-library.add(fab, faTimes, faSave, faFolderOpen, faLink, faFile, faTrash);
+library.add(
+  fab,
+  faTimes,
+  faSave,
+  faFolderOpen,
+  faLink,
+  faFile,
+  faTrash,
+  faFileUpload
+);
 
 const sleep = t => new Promise(r => setTimeout(r, t));
 
@@ -145,12 +155,31 @@ function App() {
     setFilenameOpened(filename);
   };
 
-  const openFile = (fileName) => {
+  const openFile = fileName => {
     const file = storage.files()[fileName];
     setOpenfileDialogOpen(false);
     setFilename(fileName);
     setCode(file.code);
     setFilenameOpened(fileName);
+  };
+
+  const onFileDrop = file => {
+    if (!/.asm$/i.test(file.name)) {
+      return toast("Please only upload .asm-Files", {
+        autoClose: 2500,
+        className: "toasty"
+      });
+    }
+    var reader = new FileReader();
+    reader.readAsText(file, "UTF-8");
+    reader.onload = function(evt) {
+      setFilename(file.name);
+      setCode(evt.target.result);
+      toast("File loaded!", {
+        autoClose: 2500,
+        className: "toasty"
+      });
+    };
   };
 
   return (
@@ -164,48 +193,53 @@ function App() {
         />
       )}
       <div className="background-bar"></div>
-      <div className="editor" ref={editorWrapRef}>
-        <header>
-          <div className="main-head">
-            <h1>
-              ♥ ARM<i>ore</i>
-            </h1>
-            <input
-              class="filename"
-              value={filename}
-              onChange={e => setFilename(e.target.value)}
+      <DropZone onDrop={onFileDrop}>
+        <div className="editor" ref={editorWrapRef}>
+          <header>
+            <div className="main-head">
+              <h1>
+                ♥ ARM<i>ore</i>
+              </h1>
+              <input
+                class="filename"
+                value={filename}
+                onChange={e => setFilename(e.target.value)}
+              />
+            </div>
+            <div className="controls">
+              <button
+                onClick={() => setOpenfileDialogOpen(true)}
+                className="icon-btn"
+              >
+                <FontAwesomeIcon size="2x" icon="folder-open" />
+              </button>
+              <button onClick={saveFile} className="icon-btn">
+                <FontAwesomeIcon size="2x" icon="save" />
+              </button>
+              <button onClick={copyLink} className="icon-btn">
+                <FontAwesomeIcon size="2x" icon="link" />
+              </button>
+              <button onClick={run} className="main-btn">
+                RUN
+              </button>
+            </div>
+          </header>
+          <MonacoEditor
+            width={editorwidth}
+            height={terminalopen ? "400px" : "630px"}
+            language="javascript"
+            theme="vs-dark"
+            value={code}
+            onChange={setCode}
+          />
+          {terminalopen && (
+            <Terminal
+              text={terminaltext}
+              close={() => setTerminalopen(false)}
             />
-          </div>
-          <div className="controls">
-            <button
-              onClick={() => setOpenfileDialogOpen(true)}
-              className="icon-btn"
-            >
-              <FontAwesomeIcon size="2x" icon="folder-open" />
-            </button>
-            <button onClick={saveFile} className="icon-btn">
-              <FontAwesomeIcon size="2x" icon="save" />
-            </button>
-            <button onClick={copyLink} className="icon-btn">
-              <FontAwesomeIcon size="2x" icon="link" />
-            </button>
-            <button onClick={run} className="main-btn">
-              RUN
-            </button>
-          </div>
-        </header>
-        <MonacoEditor
-          width={editorwidth}
-          height={terminalopen ? "400px" : "630px"}
-          language="javascript"
-          theme="vs-dark"
-          value={code}
-          onChange={setCode}
-        />
-        {terminalopen && (
-          <Terminal text={terminaltext} close={() => setTerminalopen(false)} />
-        )}
-      </div>
+          )}
+        </div>
+      </DropZone>
       <footer>
         <a target="_blank" href="https://github.com/mono424/armore">
           <FontAwesomeIcon icon={["fab", "github"]} />
