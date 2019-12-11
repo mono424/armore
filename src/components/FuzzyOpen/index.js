@@ -33,11 +33,15 @@ function FuzzyOpen(props) {
       onClose();
     });
 
-  }, [])
+    return function cleanup() {
+      hotkeys.unbind("esc");
+      hotkeys.unbind("enter");
+    };
+  })
 
   hotkeys.unbind("enter");
   hotkeys('enter', {
-    element: document.querySelector(".FuzzyOpen"),
+    element: document.querySelector(".FuzzyOpen input"),
   }, (e) => {
     e.preventDefault();
     itemsFiltered.length && onSelect(itemsFiltered[0]);
