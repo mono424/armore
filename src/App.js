@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import MonacoEditor from "react-monaco-editor";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import hotkeys from "hotkeys-js";
+import CookieBanner from "react-cookie-banner";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -226,6 +227,10 @@ function App() {
 
   return (
     <div className="App">
+      <CookieBanner
+        message="Yes, we use cookies... Now you are notified ;)"
+        onAccept={() => {}}
+        cookie="user-has-accepted-cookies" />
       <ToastContainer />
       {openfileDialogOpen && (
         <FuzzyOpen
